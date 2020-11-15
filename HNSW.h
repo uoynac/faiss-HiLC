@@ -134,7 +134,7 @@ struct HNSW {
   int upper_beam;
 
   /// use bounded queue during exploration
-  bool search_bounded_queue = true;
+  bool search_bounded_queue = false;
 
   // methods that initialize the tree sizes
 
