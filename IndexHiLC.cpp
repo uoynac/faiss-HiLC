@@ -423,7 +423,7 @@ void IndexHiLC::search (idx_t n, const float *x, idx_t k,
         for (size_t i = 0; i < n; i++) {
             std::vector<Neighbor> search_result_set;
             for(size_t j = 0; j< nprobe;j++){
-                int world_k = 100;
+                int world_k = k + 50; // Parameters l
                 idx_t idxi_temp1[world_k];
                 float simi_temp1[world_k];
 

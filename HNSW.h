@@ -46,6 +46,7 @@ struct DistanceComputer; // from AuxIndexStructures
 struct HNSW {
   /// internal storage of vectors (32 bits: this is expensive)
   typedef int storage_idx_t;
+  typedef short storage_idx_t_short; // 2 bytes for idx
 
   /// Faiss results are 64-bit
   typedef Index::idx_t idx_t;
@@ -111,10 +112,10 @@ struct HNSW {
 
   /// neighbors[offsets[i]:offsets[i+1]] is the list of neighbors of vector i
   /// for all levels. this is where all storage goes.
-  std::vector<storage_idx_t> neighbors;
+  std::vector<storage_idx_t_short> neighbors;
 
   /// entry point in the search structure (one of the points with maximum level
-  storage_idx_t entry_point;
+  storage_idx_t_short entry_point;
 
   faiss::RandomGenerator rng;
 

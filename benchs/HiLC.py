@@ -41,17 +41,16 @@ def mmap_bvecs(fname):
 def sanitize(x):
     return np.ascontiguousarray(x.astype('float32'))
 
+# SIFT1B - Parameters used in Paper
 basedir = '/mnt/d/github/sift1B/'
-
-dbsize = 1
-
+dbsize = 1000
 xb = bvecs_mmap(basedir + '1milliard.p1.siftbin')
 xq = bvecs_mmap(basedir + 'queries.bvecs')
 xt = bvecs_mmap(basedir + 'learn.bvecs')
 xb = xb[:dbsize * 1000 * 1000]
 gt = ivecs_read(basedir + 'gnd/idx_%dM.ivecs' % dbsize)
 xq = sanitize(xq)
-xt = sanitize(xt[:50000])
+xt = sanitize(xt[:250000])
 nq, d = xq.shape
 nb,d = xb.shape
 k=100
@@ -60,14 +59,41 @@ add_bs = 10000000
 opq_d = 160
 opq = False
 #################################
-m = 4
-link = 10
+m = 32
+link = 14
 reorder_m = 8
-ncentroids = 100
+ncentroids = 40000
 nprobe_list = [1,5]
 #################################
 beta_ntrain = 50000
 verbose = False
+
+#DEEP1B - Parameters used in Paper
+# basedir = '/mnt/d/github/deep1B/'
+# dbsize = 1000
+# xb = bvecs_mmap(basedir + 'base.fvecs')
+# xq = bvecs_mmap(basedir + 'deep1B_queries.fvecs')
+# xt = bvecs_mmap(basedir + 'learn.fvecs')
+# xb = xb[:dbsize * 1000 * 1000]
+# gt = ivecs_read(basedir + 'deep1B_groundtruth.ivecs')
+# xq = sanitize(xq)
+# xt = sanitize(xt[:250000])
+# nq, d = xq.shape
+# nb,d = xb.shape
+# k=100
+# add_bs = 10000000
+
+# opq_d = 160
+# opq = False
+# #################################
+# m = 48
+# link = 18
+# reorder_m = 16
+# ncentroids = 40000
+# nprobe_list = [1,5]
+# #################################
+# beta_ntrain = 50000
+# verbose = False
 
 if opq != True:
     opq_d = d
@@ -124,4 +150,6 @@ def search():
 
         print("\t%7.3f ms per query, R1@1 %.4f, R1@10 %.4f, R1@100 %.4f" % (
             (t1 - t0) * 1000.0 / nq, recall_at_1, recall_at_10a, recall_at_100a))
+
+faiss.omp_set_num_threads(1) #for single-thread search in paper
 search()
